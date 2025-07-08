@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Studies Learning Zone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Comic Neue', cursive;
+            background-color: #f0f9ff;
+        }
+        .lesson-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .lesson-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .quiz-option {
+            transition: background-color 0.2s ease;
+        }
+        .draggable {
+            cursor: grab;
+        }
+        .drop-zone {
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .drop-zone.over {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+        }
+        .correct-drop {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+        }
+        .incorrect-drop {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Main Container -->
+    <div id="main-container" class="container mx-auto p-4 md:p-8">
+
+        <!-- Home Page -->
+        <div id="home-page">
+            <header class="text-center mb-12">
+                <h1 class="text-5xl md:text-6xl font-bold text-blue-600">Welcome to the Learning Zone!</h1>
+                <p class="text-xl text-gray-600 mt-4">Your fun guide to Computer Studies</p>
+            </header>
+
+            <main>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Week 1: Computer Games -->
+                    <div onclick="showPage('games-page')" class="lesson-card bg-white p-8 rounded-2xl shadow-lg text-center cursor-pointer">
+                        <div class="text-6xl mb-4">🎮</div>
+                        <h2 class="text-3xl font-bold text-purple-600">Week 1</h2>
+                        <p class="text-xl text-gray-700 mt-2">Computer Games</p>
+                    </div>
+
+                    <!-- Week 2: Computer Care -->
+                    <div onclick="showPage('care-page')" class="lesson-card bg-white p-8 rounded-2xl shadow-lg text-center cursor-pointer">
+                        <div class="text-6xl mb-4">💻✨</div>
+                        <h2 class="text-3xl font-bold text-green-600">Week 2</h2>
+                        <p class="text-xl text-gray-700 mt-2">Computer Care</p>
+                    </div>
+
+                    <!-- Week 3: The Internet -->
+                    <div onclick="showPage('internet-page')" class="lesson-card bg-white p-8 rounded-2xl shadow-lg text-center cursor-pointer">
+                        <div class="text-6xl mb-4">🌐</div>
+                        <h2 class="text-3xl font-bold text-orange-600">Week 3</h2>
+                        <p class="text-xl text-gray-700 mt-2">The Internet</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Computer Games Page -->
+        <div id="games-page" class="hidden">
+            <header class="mb-8">
+                <button onclick="showPage('home-page')" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">&larr; Back Home</button>
+                <h1 class="text-4xl font-bold text-center text-purple-600 mt-4">🎮 All About Computer Games</h1>
+            </header>
+
+            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
+                <h2 class="text-3xl font-bold mb-4">What are Computer Games?</h2>
+                <p class="text-lg">Computer games are interactive forms of entertainment played on a computer or other digital device. You control characters or elements in a virtual world to achieve goals or compete with others. They come in many types, from simple puzzles to big adventures!</p>
+            </div>
+            
+            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
+                <h2 class="text-3xl font-bold mb-4">How Do They Work? (The Input-Processing-Output Cycle)</h2>
+                <div class="flex flex-col md:flex-row items-center justify-around text-center gap-4">
+                    <div class="p-4">
+                        <div class="text-5xl">⌨️</div>
+                        <h3 class="text-xl font-bold mt-2">1. Input</h3>
+                        <p>You press a key or click the mouse.</p>
+                    </div>
+                    <div class="text-4xl font-bold text-purple-500">&rarr;</div>
+                    <div class="p-4">
+                        <div class="text-5xl">🧠</div>
+                        <h3 class="text-xl font-bold mt-2">2. Processing</h3>
+                        <p>The computer thinks about your action.</p>
+                    </div>
+                    <div class="text-4xl font-bold text-purple-500">&rarr;</div>
+                     <div class="p-4">
+                        <div class="text-5xl">🖥️</div>
+                        <h3 class="text-xl font-bold mt-2">3. Output</h3>
+                        <p>Your character moves on the screen!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
+                <h2 class="text-3xl font-bold mb-4">Interactive: Advantages vs. Disadvantages</h2>
+                <p class="text-lg mb-4">Drag each item to the correct box!</p>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div id="items-container" class="w-full md:w-1/3 bg-gray-100 p-4 rounded-lg">
+                        <div class="draggable bg-blue-200 p-3 rounded-lg mb-2" draggable="true" data-type="advantage">Fun & Relaxation</div>
+                        <div class="draggable bg-blue-200 p-3 rounded-lg mb-2" draggable="true" data-type="disadvantage">Can be addictive</div>
+                        <div class="draggable bg-blue-200 p-3 rounded-lg mb-2" draggable="true" data-type="advantage">Improves Problem-Solving</div>
+                        <div class="draggable bg-blue-200 p-3 rounded-lg" draggable="true" data-type="disadvantage">Bad for health if you sit too long</div>
+                    </div>
+                    <div class="flex-1 grid grid-cols-2 gap-4">
+                        <div id="advantages-zone" class="drop-zone border-4 border-dashed border-green-400 rounded-lg p-4 min-h-[150px]">
+                            <h3 class="text-xl font-bold text-green-600 text-center">✅ Advantages</h3>
+                        </div>
+                        <div id="disadvantages-zone" class="drop-zone border-4 border-dashed border-red-400 rounded-lg p-4 min-h-[150px]">
+                            <h3 class="text-xl font-bold text-red-600 text-center">❌ Disadvantages</h3>
+                        </div>
+                    </div>
+                </div>
+                 <p id="feedback-games" class="text-center font-bold mt-4 text-lg"></p>
+            </div>
+
+            <div id="games-quiz" class="bg-white p-8 rounded-xl shadow-md">
+                <h2 class="text-3xl font-bold mb-4">Quick Quiz!</h2>
+                <p class="text-lg mb-2">What is the first step in how a computer game works?</p>
+                <div class="space-y-2">
+                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-purple-200" onclick="checkAnswer(this, false, 'games-feedback')">Processing</button>
+                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-purple-200" onclick="checkAnswer(this, true, 'games-feedback')">Input</button>
+                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-purple-200" onclick="checkAnswer(this, false, 'games-feedback')">Output</button>
+                </div>
+                <p id="games-feedback" class="mt-4 font-bold text-lg"></p>
+            </div>
+        </div>
+
+        <!-- Computer Care Page -->
+        <div id="care-page" class="hidden">
+            <header class="mb-8">
+                <button onclick="showPage('home-page')" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">&larr; Back Home</button>
+                <h1 class="text-4xl font-bold text-center text-green-600 mt-4">💻✨ Taking Care of Your Computer</h1>
+            </header>
+
+            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
+                <h2 class="text-3xl font-bold mb-4">Why is Computer Care Important?</h2>
+                <p class="text-lg">Proper care helps your computer work well for a long time. It prevents damage, protects your files, and saves you from problems later. A happy computer is a healthy computer!</p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
+                <h2 class="text-3xl font-bold mb-4">Interactive: Do's and Don'ts</h2>
+                <p class="text-lg mb-4">Click the right action for your computer!</p>
+                <div class="grid md:grid-cols-2 gap-8 text-center">
+                    <div>
+                        <h3 class="text-2xl font-bold text-green-700 mb-4">✅ DO THIS!</h3>
+                        <div class="space-y-3">
+                            <button class="w-full p-4 bg-green-100 rounded-lg hover:bg-green-200" onclick="showCareFeedback(this, true)">Handle with care</button>
+                            <button class="w-full p-4 bg-green-100 rounded-lg hover:bg-green-200" onclick="showCareFeedback(this, true)">Keep it clean</button>
+                            <button class="w-full p-4 bg-green-100 rounded-lg hover:bg-green-200" onclick="showCareFeedback(this, true)">Shut down properly</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-red-700 mb-4">❌ DON'T DO THIS!</h3>
+                        <div class="space-y-3">
+                            <button class="w-full p-4 bg-red-100 rounded-lg hover:bg-red-200" onclick="showCareFeedback(this, false)">Eat or drink nearby</button>
+                            <button class="w-full p-4 bg-red-100 rounded-lg hover:bg-red-200" onclick="showCareFeedback(this, false)">Cover the air vents</button>
+                             <button class="w-full p-4 bg-red-100 rounded-lg hover:bg-red-200" onclick="showCareFeedback(this, false)">Pull out cables suddenly</button>
+                        </div>
+                    </div>
+                </div>
+                <p id="care-feedback" class="mt-6 text-center font-bold text-2xl"></p>
+            </div>
+            
+            <div id="care-quiz" class="bg-white p-8 rounded-xl shadow-md">
+                <h2 class="text-3xl font-bold mb-4">Quick Quiz!</h2>
+                <p class="text-lg mb-2">What can happen if you block a computer's air vents?</p>
+                <div class="space-y-2">
+                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-green-200" onclick="checkAnswer(this, false, 'care-quiz-feedback')">It gets faster</button>
+                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-green-200" onclick="checkAnswer(this, true, 'care-quiz-feedback')">It can overheat</button>
+                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-green-200" onclick="checkAnswer(this, false, 'care-quiz-feedback')">It cleans itself</button>
+                </div>
+                <p id="care-quiz-feedback" class="mt-4 font-bold text-lg"></p>
+            </div>
+        </div>
+
+        <!-- The Internet Page -->
+        <div id="internet-page" class="hidden">
+            <header class="mb-8">
+                <button onclick="showPage('home-page')" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">&larr; Back Home</button>
+                <h1 class="text-4xl font-bold text-center text-orange-600 mt-4">🌐 Welcome to The Internet</h1>
+            </header>
+
+            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
+                <h2 class="text-3xl font-bold mb-4">What is the Internet?</h2>
+                <p class="text-lg">The Internet is a giant, worldwide network connecting millions of computers. Think of it like a huge web that lets computers talk to each other and share information from all over the planet!</p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
+                <h2 class="text-3xl font-bold mb-4">How Does it Work?</h2>
+                <p class="text-lg mb-4">Information is broken into small pieces called <span class="font-bold text-orange-500">packets</span>. These packets travel across the network through devices called <span class="font-bold text-orange-500">routers</span> and are put back together at their destination.</p>
+                <div class="flex flex-col md:flex-row items-center justify-around text-center gap-4 p-4 bg-blue-50 rounded-lg">
+                    <div class="text-center">
+                        <div class="text-5xl">💻</div>
+                        <h3 class="font-bold">Your Computer</h3>
+                    </div>
+                     <div class="text-4xl font-bold text-orange-500">&rarr;</div>
+                    <div class="text-center">
+                        <div class="text-5xl">📦</div>
+                        <h3 class="font-bold">Packets</h3>
+                    </div>
+                     <div class="text-4xl font-bold text-orange-500">&rarr;</div>
+                    <div class="text-center">
+                        <div class="text-5xl">📡</div>
+                        <h3 class="font-bold">Routers</h3>
+                    </div>
+                     <div class="text-4xl font-bold text-orange-500">&rarr;</div>
+                    <div class="text-center">
+                        <div class="text-5xl">🌍</div>
+                        <h3 class="font-bold">Another Computer</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
+                <h2 class="text-3xl font-bold mb-4">What Can We Do on the Internet?</h2>
+                <ul class="list-disc list-inside space-y-2 text-lg">
+                    <li><span class="font-bold">Communicate:</span> Send emails, chat with friends, and use social media.</li>
+                    <li><span class="font-bold">Learn:</span> Find information for homework and learn new things on websites like Wikipedia.</li>
+                    <li><span class="font-bold">Have Fun:</span> Watch videos, listen to music, and play online games.</li>
+                    <li><span class="font-bold">Shop:</span> Buy things from online stores.</li>
+                </ul>
+            </div>
+            
+            <div id="internet-quiz" class="bg-white p-8 rounded-xl shadow-md">
+                <h2 class="text-3xl font-bold mb-4">Quick Quiz!</h2>
+                <p class="text-lg mb-2">What are the small pieces of information that travel across the internet called?</p>
+                <div class="space-y-2">
+                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-orange-200" onclick="checkAnswer(this, true, 'internet-quiz-feedback')">Packets</button>
+                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-orange-200" onclick="checkAnswer(this, false, 'internet-quiz-feedback')">Boxes</button>
+                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-orange-200" onclick="checkAnswer(this, false, 'internet-quiz-feedback')">Routers</button>
+                </div>
+                <p id="internet-quiz-feedback" class="mt-4 font-bold text-lg"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Page Navigation ---
+        const pages = ['home-page', 'games-page', 'care-page', 'internet-page'];
+        
+        function showPage(pageId) {
+            pages.forEach(page => {
+                document.getElementById(page).classList.add('hidden');
+            });
+            document.getElementById(pageId).classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        // --- General Quiz Logic ---
+        function checkAnswer(button, isCorrect, feedbackId) {
+            const feedbackEl = document.getElementById(feedbackId);
+            const options = button.parentElement.children;
+
+            // Disable all options after one is clicked
+            for (let option of options) {
+                option.disabled = true;
+                // Remove hover effects
+                option.classList.remove('hover:bg-purple-200', 'hover:bg-green-200', 'hover:bg-orange-200');
+            }
+
+            if (isCorrect) {
+                button.classList.add('bg-green-500', 'text-white');
+                feedbackEl.textContent = "Correct! Well done! 🎉";
+                feedbackEl.classList.add('text-green-600');
+                feedbackEl.classList.remove('text-red-600');
+            } else {
+                button.classList.add('bg-red-500', 'text-white');
+                feedbackEl.textContent = "Not quite, try again next time! 😊";
+                feedbackEl.classList.add('text-red-600');
+                feedbackEl.classList.remove('text-green-600');
+            }
+        }
+
+        // --- Computer Care Interactive Logic ---
+        function showCareFeedback(button, isGoodPractice) {
+            const feedbackEl = document.getElementById('care-feedback');
+            if (isGoodPractice) {
+                feedbackEl.textContent = "Yes! That's a great way to care for your computer. 👍";
+                feedbackEl.className = 'mt-6 text-center font-bold text-2xl text-green-600';
+            } else {
+                feedbackEl.textContent = "Oops! That could harm your computer. Be careful! 👎";
+                feedbackEl.className = 'mt-6 text-center font-bold text-2xl text-red-600';
+            }
+        }
+
+        // --- Drag and Drop Logic for Games Page ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const feedbackGames = document.getElementById('feedback-games');
+            let correctDrops = 0;
+            const totalDraggables = draggables.length;
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', () => {
+                    draggable.classList.add('opacity-50');
+                });
+
+                draggable.addEventListener('dragend', () => {
+                    draggable.classList.remove('opacity-50');
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('over');
+                });
+
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('over');
+                });
+
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('over');
+                    const draggableId = document.querySelector('.opacity-50');
+                    const draggableType = draggableId.dataset.type;
+                    const zoneType = zone.id.includes('advantages') ? 'advantage' : 'disadvantage';
+
+                    if (draggableType === zoneType) {
+                        zone.appendChild(draggableId);
+                        draggableId.classList.remove('bg-blue-200');
+                        draggableId.classList.add('bg-green-200');
+                        draggableId.setAttribute('draggable', 'false');
+                        draggableId.style.cursor = 'default';
+                        correctDrops++;
+                        if(correctDrops === totalDraggables) {
+                            feedbackGames.textContent = "Great job! You sorted them all correctly! 🥳";
+                            feedbackGames.style.color = '#16a34a';
+                        }
+                    } else {
+                       feedbackGames.textContent = "Whoops! That doesn't belong there. Try again!";
+                       feedbackGames.style.color = '#ef4444';
+                       setTimeout(() => { feedbackGames.textContent = ''; }, 2000);
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>
