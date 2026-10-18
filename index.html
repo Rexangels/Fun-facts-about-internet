@@ -1,370 +1,701 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Studies Learning Zone</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Comic Neue', cursive;
-            background-color: #f0f9ff;
-        }
-        .lesson-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .lesson-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
-        .quiz-option {
-            transition: background-color 0.2s ease;
-        }
-        .draggable {
-            cursor: grab;
-        }
-        .drop-zone {
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .drop-zone.over {
-            background-color: #dbeafe;
-            border-color: #3b82f6;
-        }
-        .correct-drop {
-            background-color: #dcfce7 !important;
-            border-color: #22c55e !important;
-        }
-        .incorrect-drop {
-            background-color: #fee2e2 !important;
-            border-color: #ef4444 !important;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101d2b">
+  <meta name="description" content="A friendly, interactive computer studies playground. Discover internet facts, learn computer basics and test what you know.">
+  <title>Internet Lab — Learn the web, one discovery at a time</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #142332;
+      --muted: #607080;
+      --paper: #f5f7f6;
+      --surface: #ffffff;
+      --line: #e2e8e6;
+      --navy: #101d2b;
+      --navy-soft: #182a3c;
+      --lime: #d8fa72;
+      --mint: #e7f7ed;
+      --blue: #dceeff;
+      --peach: #ffeadc;
+      --purple: #eee8ff;
+      --shadow: 0 20px 60px rgba(17, 35, 48, .08);
+      --radius: 24px;
+      --max: 1160px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid #6c8dff; outline-offset: 3px; }
+    .skip-link { position: absolute; left: 16px; top: -70px; background: var(--lime); color: var(--navy); padding: 10px 15px; border-radius: 12px; z-index: 100; font-weight: 800; }
+    .skip-link:focus { top: 12px; }
+    .wrap { width: min(var(--max), calc(100% - 40px)); margin-inline: auto; }
+    .topbar { position: sticky; top: 0; z-index: 50; background: rgba(16,29,43,.96); color: white; backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,.09); }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 22px; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; font-weight: 850; letter-spacing: -.04em; font-size: 1.08rem; }
+    .brand-mark { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 13px; background: var(--lime); color: var(--navy); font-size: 1.05rem; font-weight: 950; }
+    .brand small { display: block; color: #a9bac7; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 750; line-height: 1.1; margin-top: 2px; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { color: #d8e1e7; text-decoration: none; font-size: .91rem; font-weight: 650; transition: color .2s ease; }
+    .nav-links a:hover { color: var(--lime); }
+    .nav-links .nav-cta { color: var(--navy); background: var(--lime); padding: 10px 17px; border-radius: 999px; }
+    .nav-links .nav-cta:hover { color: var(--navy); background: #e4ff9b; }
+    .menu-toggle { display: none; background: transparent; border: 1px solid rgba(255,255,255,.2); color: white; border-radius: 12px; width: 44px; height: 44px; font-size: 1.35rem; }
+    .hero { background: var(--navy); color: white; overflow: hidden; position: relative; }
+    .hero:before { content: ""; position: absolute; width: 500px; height: 500px; border-radius: 50%; right: -190px; top: -260px; border: 1px solid rgba(216,250,114,.2); box-shadow: 0 0 0 55px rgba(216,250,114,.025), 0 0 0 110px rgba(216,250,114,.025); pointer-events: none; }
+    .hero-grid { display: grid; grid-template-columns: 1.12fr .88fr; align-items: center; gap: 60px; padding-block: 78px 84px; position: relative; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; text-transform: uppercase; font-size: .72rem; letter-spacing: .15em; font-weight: 850; color: #a9c7d2; }
+    .eyebrow:before { content: ""; width: 22px; height: 2px; background: var(--lime); display: block; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 720px; font-size: clamp(2.7rem, 6vw, 5.4rem); line-height: .99; letter-spacing: -.065em; margin: 21px 0 22px; font-weight: 850; }
+    h1 span { color: var(--lime); }
+    .hero-copy { color: #c1ced8; max-width: 555px; font-size: clamp(1.02rem, 2vw, 1.16rem); margin-bottom: 29px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 999px; padding: 13px 19px; font-weight: 800; text-decoration: none; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { color: var(--navy); background: var(--lime); box-shadow: 0 8px 22px rgba(216,250,114,.12); }
+    .btn-primary:hover { background: #e7ff9f; }
+    .btn-quiet { color: white; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.04); }
+    .btn-quiet:hover { background: rgba(255,255,255,.1); }
+    .hero-note { color: #8fa2b1; margin: 20px 0 0; font-size: .82rem; display: flex; align-items: center; gap: 9px; }
+    .hero-note .dot { width: 7px; height: 7px; background: var(--lime); border-radius: 50%; display: inline-block; }
+    .feature-card { background: var(--lime); color: var(--navy); border-radius: 30px; padding: 28px; min-height: 340px; box-shadow: 0 30px 80px rgba(0,0,0,.22); position: relative; overflow: hidden; transform: rotate(1.5deg); }
+    .feature-card:after { content: "?" ; position: absolute; right: -12px; bottom: -90px; font-size: 20rem; line-height: 1; font-weight: 950; color: rgba(16,29,43,.055); pointer-events: none; }
+    .feature-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; position: relative; z-index: 1; }
+    .tag-dark { border-radius: 999px; background: rgba(16,29,43,.09); padding: 7px 11px; text-transform: uppercase; letter-spacing: .1em; font-size: .68rem; font-weight: 900; }
+    .feature-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 16px; background: rgba(16,29,43,.09); font-size: 1.55rem; }
+    .feature-card h2 { font-size: clamp(1.6rem, 3vw, 2.15rem); line-height: 1.13; letter-spacing: -.045em; max-width: 360px; margin: 26px 0 13px; position: relative; z-index: 1; }
+    .feature-card p { max-width: 370px; color: #354538; position: relative; z-index: 1; margin-bottom: 20px; }
+    .feature-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; position: relative; z-index: 1; }
+    .text-button { border: 0; background: transparent; color: inherit; font-weight: 850; padding: 8px 0; }
+    .text-button:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .section { padding-block: 76px; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 30px; }
+    .section-kicker { text-transform: uppercase; letter-spacing: .15em; color: #587667; font-size: .72rem; font-weight: 900; margin-bottom: 10px; }
+    .section-head h2 { font-size: clamp(2rem, 4vw, 3.15rem); letter-spacing: -.06em; line-height: 1.05; margin-bottom: 10px; }
+    .section-head p { color: var(--muted); max-width: 560px; margin-bottom: 0; }
+    .section-count { white-space: nowrap; color: var(--muted); font-weight: 750; font-size: .84rem; }
+    .fact-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-bottom: 24px; }
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn { border: 1px solid var(--line); background: white; color: #455563; border-radius: 999px; padding: 9px 14px; font-size: .84rem; font-weight: 800; }
+    .filter-btn[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: white; }
+    .filter-btn:hover { border-color: #a4b8ad; }
+    .search-wrap { position: relative; min-width: min(100%, 255px); }
+    .search-wrap span { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #71808c; }
+    .search { width: 100%; background: white; border: 1px solid var(--line); border-radius: 999px; padding: 11px 15px 11px 38px; color: var(--ink); outline-offset: 2px; }
+    .fact-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 17px; }
+    .fact-card { min-height: 260px; background: white; border: 1px solid var(--line); border-radius: 22px; padding: 22px; display: flex; flex-direction: column; box-shadow: 0 4px 16px rgba(16,29,43,.025); transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
+    .fact-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: #c9d8cf; }
+    .fact-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    .fact-icon { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 15px; font-size: 1.38rem; }
+    .bg-internet { background: var(--blue); }
+    .bg-web { background: var(--purple); }
+    .bg-care { background: var(--mint); }
+    .bg-games { background: var(--peach); }
+    .category-pill { font-size: .68rem; font-weight: 850; letter-spacing: .04em; color: #526575; border: 1px solid #e6ece9; border-radius: 999px; padding: 5px 9px; }
+    .save-btn { border: 0; background: #f3f6f4; border-radius: 50%; width: 35px; height: 35px; display: grid; place-items: center; color: #53636f; font-size: 1rem; flex-shrink: 0; }
+    .save-btn[aria-pressed="true"] { background: var(--lime); color: var(--navy); }
+    .fact-card h3 { font-size: 1.15rem; line-height: 1.28; letter-spacing: -.025em; margin: 0 0 9px; }
+    .fact-card p { color: var(--muted); font-size: .91rem; margin-bottom: 18px; }
+    .fact-actions { margin-top: auto; padding-top: 12px; border-top: 1px solid #eef1ef; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .fact-actions button { border: 0; padding: 5px 0; background: transparent; color: #334f43; font-size: .81rem; font-weight: 850; }
+    .fact-actions button:hover { color: #153224; text-decoration: underline; text-underline-offset: 4px; }
+    .empty-state { background: white; border: 1px dashed #ccd7d2; border-radius: 20px; text-align: center; padding: 40px 20px; color: var(--muted); grid-column: 1/-1; }
+    .lesson-section { background: #edf2ef; }
+    .lesson-layout { display: grid; grid-template-columns: .78fr 1.22fr; gap: 26px; align-items: start; }
+    .lesson-list { display: grid; gap: 10px; }
+    .lesson-tab { display: flex; align-items: center; gap: 14px; width: 100%; border: 1px solid transparent; border-radius: 18px; padding: 16px; background: rgba(255,255,255,.65); color: var(--ink); text-align: left; transition: background .2s ease, border-color .2s ease; }
+    .lesson-tab:hover { background: white; }
+    .lesson-tab[aria-selected="true"] { background: white; border-color: #b6c9bd; box-shadow: 0 8px 20px rgba(20,35,50,.045); }
+    .lesson-tab-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 14px; font-size: 1.35rem; flex: 0 0 auto; }
+    .lesson-tab strong { display: block; font-size: .96rem; }
+    .lesson-tab small { display: block; margin-top: 2px; color: var(--muted); font-size: .8rem; }
+    .lesson-panel { background: white; border-radius: 26px; border: 1px solid #e3eae6; padding: clamp(23px, 4vw, 36px); box-shadow: 0 12px 36px rgba(20,35,50,.04); min-height: 420px; }
+    .lesson-panel-head { display: flex; align-items: start; gap: 15px; margin-bottom: 22px; }
+    .lesson-panel .big-icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 18px; font-size: 1.65rem; flex-shrink: 0; }
+    .lesson-panel h3 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.1; letter-spacing: -.045em; margin-bottom: 7px; }
+    .lesson-panel .lead { color: var(--muted); margin-bottom: 0; font-size: .96rem; }
+    .lesson-steps { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: lesson; }
+    .lesson-steps li { counter-increment: lesson; display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start; color: #4d5d68; font-size: .93rem; }
+    .lesson-steps li:before { content: counter(lesson, decimal-leading-zero); display: grid; place-items: center; background: #f0f5f2; color: #2d6447; border-radius: 9px; min-height: 30px; font-size: .72rem; font-weight: 900; }
+    .lesson-steps strong { color: var(--ink); }
+    .lesson-tip { margin-top: 23px; border-radius: 16px; padding: 16px 18px; background: #f2f8df; color: #3d5230; font-size: .88rem; }
+    .lesson-tip strong { color: #21391b; }
+    .quiz-section { background: var(--navy); color: white; }
+    .quiz-section .section-kicker { color: var(--lime); }
+    .quiz-section .section-head p { color: #b6c4ce; }
+    .quiz-card { display: grid; grid-template-columns: .62fr 1.38fr; background: white; color: var(--ink); border-radius: 28px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.18); }
+    .quiz-side { background: var(--lime); padding: 30px; color: var(--navy); position: relative; overflow: hidden; }
+    .quiz-side:after { content: "?"; position: absolute; right: -22px; bottom: -90px; font-size: 17rem; line-height: 1; color: rgba(16,29,43,.07); font-weight: 950; }
+    .quiz-side .quiz-emoji { font-size: 2.5rem; display: block; margin-bottom: 23px; }
+    .quiz-side h3 { font-size: 1.8rem; line-height: 1.08; letter-spacing: -.05em; max-width: 230px; margin-bottom: 12px; position: relative; z-index: 1; }
+    .quiz-side p { color: #43523c; font-size: .9rem; position: relative; z-index: 1; }
+    .quiz-score { display: inline-block; padding: 7px 10px; border: 1px solid rgba(16,29,43,.17); border-radius: 999px; font-weight: 850; font-size: .77rem; position: relative; z-index: 1; }
+    .quiz-main { padding: clamp(23px, 4vw, 38px); }
+    .quiz-progress-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; color: var(--muted); font-size: .78rem; font-weight: 800; }
+    .progress-track { height: 7px; background: #edf1ef; border-radius: 99px; overflow: hidden; margin-bottom: 26px; }
+    .progress-fill { width: 0; height: 100%; background: #527e62; transition: width .25s ease; }
+    .question { font-size: clamp(1.28rem, 3vw, 1.8rem); line-height: 1.25; letter-spacing: -.035em; margin-bottom: 20px; }
+    .answer-list { display: grid; gap: 10px; }
+    .answer-btn { width: 100%; border: 1px solid #e0e7e3; background: white; color: var(--ink); border-radius: 14px; padding: 13px 15px; text-align: left; display: flex; align-items: center; gap: 12px; font-weight: 650; transition: border-color .2s ease, background .2s ease; }
+    .answer-btn:hover:not(:disabled) { border-color: #91ae9b; background: #f5faf6; }
+    .answer-key { display: grid; place-items: center; border: 1px solid #dce5e0; background: #f6f8f7; width: 29px; height: 29px; border-radius: 9px; font-weight: 850; color: #61716b; flex-shrink: 0; font-size: .8rem; }
+    .answer-btn.correct { border-color: #61a578; background: #eaf7ed; }
+    .answer-btn.correct .answer-key { background: #2b7a48; border-color: #2b7a48; color: white; }
+    .answer-btn.incorrect { border-color: #d98282; background: #fff0f0; }
+    .answer-btn.incorrect .answer-key { background: #b94a4a; border-color: #b94a4a; color: white; }
+    .quiz-feedback { min-height: 28px; color: var(--muted); font-size: .88rem; margin: 15px 0; }
+    .quiz-feedback.good { color: #287347; font-weight: 800; }
+    .quiz-feedback.bad { color: #ae3b3b; font-weight: 800; }
+    .quiz-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .quiz-controls .btn { font-size: .87rem; }
+    .btn-dark { background: var(--navy); color: white; }
+    .btn-dark:hover { background: #263a4b; }
+    .btn-light { border: 1px solid var(--line); color: var(--ink); background: white; }
+    .quiz-result { text-align: center; padding: 20px 5px; }
+    .quiz-result .result-emoji { font-size: 3.4rem; display: block; margin-bottom: 16px; }
+    .quiz-result h3 { font-size: 2rem; letter-spacing: -.05em; margin-bottom: 7px; }
+    .quiz-result p { color: var(--muted); max-width: 380px; margin: 0 auto 22px; }
+    .footer { background: #0b1621; color: white; padding: 30px 0; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .footer p { margin: 0; font-size: .83rem; color: #a9b9c5; }
+    .footer strong { color: white; }
+    .footer-links { display: flex; gap: 18px; flex-wrap: wrap; }
+    .footer a { color: #c2d0d8; text-decoration: none; font-size: .83rem; font-weight: 700; }
+    .footer a:hover { color: var(--lime); }
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); background: #102131; color: white; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: 12px 18px; box-shadow: 0 12px 35px rgba(0,0,0,.2); z-index: 100; opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; font-size: .86rem; font-weight: 750; max-width: calc(100vw - 32px); text-align: center; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .hidden { display: none !important; }
+    @media (max-width: 900px) {
+      .hero-grid { gap: 34px; padding-block: 60px 68px; grid-template-columns: 1.08fr .92fr; }
+      .feature-card { padding: 24px; min-height: 315px; }
+      .fact-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .lesson-layout { grid-template-columns: .9fr 1.1fr; }
+    }
+    @media (max-width: 700px) {
+      .wrap { width: min(var(--max), calc(100% - 28px)); }
+      .nav { min-height: 68px; }
+      .menu-toggle { display: inline-grid; place-items: center; }
+      .nav-links { display: none; position: absolute; top: 67px; left: 0; right: 0; background: var(--navy); padding: 10px 20px 20px; border-bottom: 1px solid rgba(255,255,255,.12); flex-direction: column; align-items: stretch; gap: 0; }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 13px 8px; }
+      .nav-links .nav-cta { text-align: center; margin-top: 8px; }
+      .hero-grid { grid-template-columns: 1fr; padding-block: 53px 58px; gap: 35px; }
+      .hero h1 { max-width: 600px; font-size: clamp(2.7rem, 13vw, 4.5rem); }
+      .feature-card { transform: rotate(.5deg); min-height: 300px; }
+      .section { padding-block: 56px; }
+      .section-head { align-items: start; flex-direction: column; gap: 12px; }
+      .fact-toolbar { align-items: stretch; }
+      .search-wrap { width: 100%; }
+      .fact-grid { gap: 12px; }
+      .fact-card { min-height: 275px; padding: 17px; }
+      .lesson-layout { grid-template-columns: 1fr; }
+      .lesson-list { grid-template-columns: 1fr; }
+      .lesson-panel { min-height: auto; }
+      .quiz-card { grid-template-columns: 1fr; }
+      .quiz-side { padding: 24px; }
+      .quiz-side .quiz-emoji { margin-bottom: 12px; }
+      .quiz-side h3 { max-width: none; font-size: 1.6rem; }
+      .quiz-side p { margin-bottom: 14px; }
+      .quiz-side:after { font-size: 11rem; bottom: -58px; }
+    }
+    @media (max-width: 440px) {
+      .fact-grid { grid-template-columns: 1fr; }
+      .fact-card { min-height: auto; }
+      .filters { gap: 6px; }
+      .filter-btn { padding: 8px 11px; font-size: .78rem; }
+      .hero-actions .btn { width: 100%; }
+      .feature-card { padding: 22px; }
+      .quiz-controls { align-items: stretch; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *:before, *:after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
 </head>
-<body class="text-gray-800">
-
-    <!-- Main Container -->
-    <div id="main-container" class="container mx-auto p-4 md:p-8">
-
-        <!-- Home Page -->
-        <div id="home-page">
-            <header class="text-center mb-12">
-                <h1 class="text-5xl md:text-6xl font-bold text-blue-600">Welcome to the Learning Zone!</h1>
-                <p class="text-xl text-gray-600 mt-4">Your fun guide to Computer Studies</p>
-            </header>
-
-            <main>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <!-- Week 1: Computer Games -->
-                    <div onclick="showPage('games-page')" class="lesson-card bg-white p-8 rounded-2xl shadow-lg text-center cursor-pointer">
-                        <div class="text-6xl mb-4">🎮</div>
-                        <h2 class="text-3xl font-bold text-purple-600">Week 1</h2>
-                        <p class="text-xl text-gray-700 mt-2">Computer Games</p>
-                    </div>
-
-                    <!-- Week 2: Computer Care -->
-                    <div onclick="showPage('care-page')" class="lesson-card bg-white p-8 rounded-2xl shadow-lg text-center cursor-pointer">
-                        <div class="text-6xl mb-4">💻✨</div>
-                        <h2 class="text-3xl font-bold text-green-600">Week 2</h2>
-                        <p class="text-xl text-gray-700 mt-2">Computer Care</p>
-                    </div>
-
-                    <!-- Week 3: The Internet -->
-                    <div onclick="showPage('internet-page')" class="lesson-card bg-white p-8 rounded-2xl shadow-lg text-center cursor-pointer">
-                        <div class="text-6xl mb-4">🌐</div>
-                        <h2 class="text-3xl font-bold text-orange-600">Week 3</h2>
-                        <p class="text-xl text-gray-700 mt-2">The Internet</p>
-                    </div>
-                </div>
-            </main>
-        </div>
-
-        <!-- Computer Games Page -->
-        <div id="games-page" class="hidden">
-            <header class="mb-8">
-                <button onclick="showPage('home-page')" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">&larr; Back Home</button>
-                <h1 class="text-4xl font-bold text-center text-purple-600 mt-4">🎮 All About Computer Games</h1>
-            </header>
-
-            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
-                <h2 class="text-3xl font-bold mb-4">What are Computer Games?</h2>
-                <p class="text-lg">Computer games are interactive forms of entertainment played on a computer or other digital device. You control characters or elements in a virtual world to achieve goals or compete with others. They come in many types, from simple puzzles to big adventures!</p>
-            </div>
-            
-            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
-                <h2 class="text-3xl font-bold mb-4">How Do They Work? (The Input-Processing-Output Cycle)</h2>
-                <div class="flex flex-col md:flex-row items-center justify-around text-center gap-4">
-                    <div class="p-4">
-                        <div class="text-5xl">⌨️</div>
-                        <h3 class="text-xl font-bold mt-2">1. Input</h3>
-                        <p>You press a key or click the mouse.</p>
-                    </div>
-                    <div class="text-4xl font-bold text-purple-500">&rarr;</div>
-                    <div class="p-4">
-                        <div class="text-5xl">🧠</div>
-                        <h3 class="text-xl font-bold mt-2">2. Processing</h3>
-                        <p>The computer thinks about your action.</p>
-                    </div>
-                    <div class="text-4xl font-bold text-purple-500">&rarr;</div>
-                     <div class="p-4">
-                        <div class="text-5xl">🖥️</div>
-                        <h3 class="text-xl font-bold mt-2">3. Output</h3>
-                        <p>Your character moves on the screen!</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
-                <h2 class="text-3xl font-bold mb-4">Interactive: Advantages vs. Disadvantages</h2>
-                <p class="text-lg mb-4">Drag each item to the correct box!</p>
-                <div class="flex flex-col md:flex-row gap-4">
-                    <div id="items-container" class="w-full md:w-1/3 bg-gray-100 p-4 rounded-lg">
-                        <div class="draggable bg-blue-200 p-3 rounded-lg mb-2" draggable="true" data-type="advantage">Fun & Relaxation</div>
-                        <div class="draggable bg-blue-200 p-3 rounded-lg mb-2" draggable="true" data-type="disadvantage">Can be addictive</div>
-                        <div class="draggable bg-blue-200 p-3 rounded-lg mb-2" draggable="true" data-type="advantage">Improves Problem-Solving</div>
-                        <div class="draggable bg-blue-200 p-3 rounded-lg" draggable="true" data-type="disadvantage">Bad for health if you sit too long</div>
-                    </div>
-                    <div class="flex-1 grid grid-cols-2 gap-4">
-                        <div id="advantages-zone" class="drop-zone border-4 border-dashed border-green-400 rounded-lg p-4 min-h-[150px]">
-                            <h3 class="text-xl font-bold text-green-600 text-center">✅ Advantages</h3>
-                        </div>
-                        <div id="disadvantages-zone" class="drop-zone border-4 border-dashed border-red-400 rounded-lg p-4 min-h-[150px]">
-                            <h3 class="text-xl font-bold text-red-600 text-center">❌ Disadvantages</h3>
-                        </div>
-                    </div>
-                </div>
-                 <p id="feedback-games" class="text-center font-bold mt-4 text-lg"></p>
-            </div>
-
-            <div id="games-quiz" class="bg-white p-8 rounded-xl shadow-md">
-                <h2 class="text-3xl font-bold mb-4">Quick Quiz!</h2>
-                <p class="text-lg mb-2">What is the first step in how a computer game works?</p>
-                <div class="space-y-2">
-                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-purple-200" onclick="checkAnswer(this, false, 'games-feedback')">Processing</button>
-                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-purple-200" onclick="checkAnswer(this, true, 'games-feedback')">Input</button>
-                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-purple-200" onclick="checkAnswer(this, false, 'games-feedback')">Output</button>
-                </div>
-                <p id="games-feedback" class="mt-4 font-bold text-lg"></p>
-            </div>
-        </div>
-
-        <!-- Computer Care Page -->
-        <div id="care-page" class="hidden">
-            <header class="mb-8">
-                <button onclick="showPage('home-page')" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">&larr; Back Home</button>
-                <h1 class="text-4xl font-bold text-center text-green-600 mt-4">💻✨ Taking Care of Your Computer</h1>
-            </header>
-
-            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
-                <h2 class="text-3xl font-bold mb-4">Why is Computer Care Important?</h2>
-                <p class="text-lg">Proper care helps your computer work well for a long time. It prevents damage, protects your files, and saves you from problems later. A happy computer is a healthy computer!</p>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
-                <h2 class="text-3xl font-bold mb-4">Interactive: Do's and Don'ts</h2>
-                <p class="text-lg mb-4">Click the right action for your computer!</p>
-                <div class="grid md:grid-cols-2 gap-8 text-center">
-                    <div>
-                        <h3 class="text-2xl font-bold text-green-700 mb-4">✅ DO THIS!</h3>
-                        <div class="space-y-3">
-                            <button class="w-full p-4 bg-green-100 rounded-lg hover:bg-green-200" onclick="showCareFeedback(this, true)">Handle with care</button>
-                            <button class="w-full p-4 bg-green-100 rounded-lg hover:bg-green-200" onclick="showCareFeedback(this, true)">Keep it clean</button>
-                            <button class="w-full p-4 bg-green-100 rounded-lg hover:bg-green-200" onclick="showCareFeedback(this, true)">Shut down properly</button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-red-700 mb-4">❌ DON'T DO THIS!</h3>
-                        <div class="space-y-3">
-                            <button class="w-full p-4 bg-red-100 rounded-lg hover:bg-red-200" onclick="showCareFeedback(this, false)">Eat or drink nearby</button>
-                            <button class="w-full p-4 bg-red-100 rounded-lg hover:bg-red-200" onclick="showCareFeedback(this, false)">Cover the air vents</button>
-                             <button class="w-full p-4 bg-red-100 rounded-lg hover:bg-red-200" onclick="showCareFeedback(this, false)">Pull out cables suddenly</button>
-                        </div>
-                    </div>
-                </div>
-                <p id="care-feedback" class="mt-6 text-center font-bold text-2xl"></p>
-            </div>
-            
-            <div id="care-quiz" class="bg-white p-8 rounded-xl shadow-md">
-                <h2 class="text-3xl font-bold mb-4">Quick Quiz!</h2>
-                <p class="text-lg mb-2">What can happen if you block a computer's air vents?</p>
-                <div class="space-y-2">
-                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-green-200" onclick="checkAnswer(this, false, 'care-quiz-feedback')">It gets faster</button>
-                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-green-200" onclick="checkAnswer(this, true, 'care-quiz-feedback')">It can overheat</button>
-                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-green-200" onclick="checkAnswer(this, false, 'care-quiz-feedback')">It cleans itself</button>
-                </div>
-                <p id="care-quiz-feedback" class="mt-4 font-bold text-lg"></p>
-            </div>
-        </div>
-
-        <!-- The Internet Page -->
-        <div id="internet-page" class="hidden">
-            <header class="mb-8">
-                <button onclick="showPage('home-page')" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">&larr; Back Home</button>
-                <h1 class="text-4xl font-bold text-center text-orange-600 mt-4">🌐 Welcome to The Internet</h1>
-            </header>
-
-            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
-                <h2 class="text-3xl font-bold mb-4">What is the Internet?</h2>
-                <p class="text-lg">The Internet is a giant, worldwide network connecting millions of computers. Think of it like a huge web that lets computers talk to each other and share information from all over the planet!</p>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
-                <h2 class="text-3xl font-bold mb-4">How Does it Work?</h2>
-                <p class="text-lg mb-4">Information is broken into small pieces called <span class="font-bold text-orange-500">packets</span>. These packets travel across the network through devices called <span class="font-bold text-orange-500">routers</span> and are put back together at their destination.</p>
-                <div class="flex flex-col md:flex-row items-center justify-around text-center gap-4 p-4 bg-blue-50 rounded-lg">
-                    <div class="text-center">
-                        <div class="text-5xl">💻</div>
-                        <h3 class="font-bold">Your Computer</h3>
-                    </div>
-                     <div class="text-4xl font-bold text-orange-500">&rarr;</div>
-                    <div class="text-center">
-                        <div class="text-5xl">📦</div>
-                        <h3 class="font-bold">Packets</h3>
-                    </div>
-                     <div class="text-4xl font-bold text-orange-500">&rarr;</div>
-                    <div class="text-center">
-                        <div class="text-5xl">📡</div>
-                        <h3 class="font-bold">Routers</h3>
-                    </div>
-                     <div class="text-4xl font-bold text-orange-500">&rarr;</div>
-                    <div class="text-center">
-                        <div class="text-5xl">🌍</div>
-                        <h3 class="font-bold">Another Computer</h3>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow-md mb-8">
-                <h2 class="text-3xl font-bold mb-4">What Can We Do on the Internet?</h2>
-                <ul class="list-disc list-inside space-y-2 text-lg">
-                    <li><span class="font-bold">Communicate:</span> Send emails, chat with friends, and use social media.</li>
-                    <li><span class="font-bold">Learn:</span> Find information for homework and learn new things on websites like Wikipedia.</li>
-                    <li><span class="font-bold">Have Fun:</span> Watch videos, listen to music, and play online games.</li>
-                    <li><span class="font-bold">Shop:</span> Buy things from online stores.</li>
-                </ul>
-            </div>
-            
-            <div id="internet-quiz" class="bg-white p-8 rounded-xl shadow-md">
-                <h2 class="text-3xl font-bold mb-4">Quick Quiz!</h2>
-                <p class="text-lg mb-2">What are the small pieces of information that travel across the internet called?</p>
-                <div class="space-y-2">
-                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-orange-200" onclick="checkAnswer(this, true, 'internet-quiz-feedback')">Packets</button>
-                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-orange-200" onclick="checkAnswer(this, false, 'internet-quiz-feedback')">Boxes</button>
-                    <button class="quiz-option w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-orange-200" onclick="checkAnswer(this, false, 'internet-quiz-feedback')">Routers</button>
-                </div>
-                <p id="internet-quiz-feedback" class="mt-4 font-bold text-lg"></p>
-            </div>
-        </div>
-
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#home" aria-label="Internet Lab home">
+        <span class="brand-mark">i.</span>
+        <span>Internet Lab<small>Curiosity, connected</small></span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-links">☰</button>
+      <nav class="nav-links" id="nav-links" aria-label="Main navigation">
+        <a href="#discover">Discover</a>
+        <a href="#learn">Learn</a>
+        <a href="#challenge">Take the quiz</a>
+        <a href="#discover" class="nav-cta">Explore a fact ↗</a>
+      </nav>
     </div>
+  </header>
 
-    <script>
-        // --- Page Navigation ---
-        const pages = ['home-page', 'games-page', 'care-page', 'internet-page'];
-        
-        function showPage(pageId) {
-            pages.forEach(page => {
-                document.getElementById(page).classList.add('hidden');
-            });
-            document.getElementById(pageId).classList.remove('hidden');
-            window.scrollTo(0, 0);
-        }
+  <main id="main">
+    <section class="hero" id="home">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">Your computer studies playground</span>
+          <h1>The digital world is full of <span>surprises.</span></h1>
+          <p class="hero-copy">Discover how the internet works, learn to care for your computer, and test your knowledge with short, interactive challenges.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#discover">Discover a cool fact <span aria-hidden="true">↘</span></a>
+            <a class="btn btn-quiet" href="#learn">Start learning <span aria-hidden="true">→</span></a>
+          </div>
+          <p class="hero-note"><span class="dot"></span> Short lessons. Useful facts. Room to get curious.</p>
+        </div>
+        <article class="feature-card" aria-labelledby="daily-title">
+          <div class="feature-top">
+            <span class="tag-dark">Today's discovery</span>
+            <span class="feature-icon" id="daily-icon" aria-hidden="true">🌐</span>
+          </div>
+          <h2 id="daily-title">The internet and the web are not the same thing.</h2>
+          <p id="daily-body">The internet connects devices around the world. The World Wide Web is one service that runs on that network.</p>
+          <div class="feature-bottom">
+            <span class="tag-dark" id="daily-category">Internet basics</span>
+            <button class="text-button" id="next-daily" type="button">Another fact ↗</button>
+          </div>
+        </article>
+      </div>
+    </section>
 
-        // --- General Quiz Logic ---
-        function checkAnswer(button, isCorrect, feedbackId) {
-            const feedbackEl = document.getElementById(feedbackId);
-            const options = button.parentElement.children;
+    <section class="section" id="discover">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">The curiosity collection</div>
+            <h2>Little facts. Big ideas.</h2>
+            <p>Browse bite-sized discoveries and see why each one matters. Save the facts you want to remember.</p>
+          </div>
+          <div class="section-count" id="fact-count" aria-live="polite">9 discoveries</div>
+        </div>
+        <div class="fact-toolbar">
+          <div class="filters" role="group" aria-label="Filter facts by topic">
+            <button class="filter-btn" type="button" data-filter="All" aria-pressed="true">All facts</button>
+            <button class="filter-btn" type="button" data-filter="Internet" aria-pressed="false">Internet</button>
+            <button class="filter-btn" type="button" data-filter="Web" aria-pressed="false">Web basics</button>
+            <button class="filter-btn" type="button" data-filter="Care" aria-pressed="false">Computer care</button>
+            <button class="filter-btn" type="button" data-filter="Games" aria-pressed="false">Games</button>
+            <button class="filter-btn" type="button" data-filter="Saved" aria-pressed="false">★ Saved</button>
+          </div>
+          <label class="search-wrap">
+            <span aria-hidden="true">⌕</span>
+            <input id="fact-search" class="search" type="search" placeholder="Search facts..." aria-label="Search facts">
+          </label>
+        </div>
+        <div class="fact-grid" id="fact-grid" aria-live="polite"></div>
+      </div>
+    </section>
 
-            // Disable all options after one is clicked
-            for (let option of options) {
-                option.disabled = true;
-                // Remove hover effects
-                option.classList.remove('hover:bg-purple-200', 'hover:bg-green-200', 'hover:bg-orange-200');
-            }
+    <section class="section lesson-section" id="learn">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">The learning corner</div>
+            <h2>Choose a path. Build your skills.</h2>
+            <p>Explore three core computer studies topics with straightforward explanations and practical examples.</p>
+          </div>
+        </div>
+        <div class="lesson-layout">
+          <div class="lesson-list" role="tablist" aria-label="Choose a lesson">
+            <button class="lesson-tab" type="button" role="tab" id="tab-internet" aria-controls="lesson-panel" aria-selected="true" data-lesson="internet">
+              <span class="lesson-tab-icon bg-internet" aria-hidden="true">🌐</span>
+              <span><strong>The Internet</strong><small>Networks, websites and data</small></span>
+            </button>
+            <button class="lesson-tab" type="button" role="tab" id="tab-care" aria-controls="lesson-panel" aria-selected="false" data-lesson="care">
+              <span class="lesson-tab-icon bg-care" aria-hidden="true">💻</span>
+              <span><strong>Computer care</strong><small>Keep your device in good shape</small></span>
+            </button>
+            <button class="lesson-tab" type="button" role="tab" id="tab-games" aria-controls="lesson-panel" aria-selected="false" data-lesson="games">
+              <span class="lesson-tab-icon bg-games" aria-hidden="true">🎮</span>
+              <span><strong>Computer games</strong><small>Input, processing and output</small></span>
+            </button>
+          </div>
+          <article class="lesson-panel" id="lesson-panel" role="tabpanel" aria-labelledby="tab-internet" tabindex="0">
+            <div class="lesson-panel-head">
+              <span class="big-icon bg-internet" id="lesson-icon" aria-hidden="true">🌐</span>
+              <div>
+                <div class="section-kicker" id="lesson-kicker">Lesson 01 · Internet basics</div>
+                <h3 id="lesson-title">How does the internet move information?</h3>
+                <p class="lead" id="lesson-lead">Think of the internet as a network of networks that helps devices communicate.</p>
+              </div>
+            </div>
+            <ol class="lesson-steps" id="lesson-steps">
+              <li><span><strong>Your device makes a request.</strong> For example, you open a website in a browser.</span></li>
+              <li><span><strong>Data travels across connected networks.</strong> Routers help direct information toward its destination.</span></li>
+              <li><span><strong>The response returns to your device.</strong> Your browser uses the received data to show the page.</span></li>
+            </ol>
+            <div class="lesson-tip" id="lesson-tip"><strong>Remember:</strong> The internet is the network. The web is one of the services that uses it.</div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-            if (isCorrect) {
-                button.classList.add('bg-green-500', 'text-white');
-                feedbackEl.textContent = "Correct! Well done! 🎉";
-                feedbackEl.classList.add('text-green-600');
-                feedbackEl.classList.remove('text-red-600');
+    <section class="section quiz-section" id="challenge">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Your turn</div>
+            <h2>Ready to test what you know?</h2>
+            <p>Five quick questions. Choose an answer, get instant feedback, and learn from every attempt.</p>
+          </div>
+        </div>
+        <div class="quiz-card">
+          <aside class="quiz-side">
+            <span class="quiz-emoji" aria-hidden="true">🧠</span>
+            <h3>A little challenge goes a long way.</h3>
+            <p>No pressure. Learn as you go and try again whenever you're ready.</p>
+            <span class="quiz-score" id="quiz-score">Score: 0 / 5</span>
+          </aside>
+          <div class="quiz-main" id="quiz-main">
+            <div class="quiz-progress-row"><span id="quiz-step">QUESTION 01 OF 05</span><span id="quiz-progress-label">0% complete</span></div>
+            <div class="progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="quiz-progress"><div class="progress-fill" id="quiz-progress-fill"></div></div>
+            <h3 class="question" id="quiz-question">What is the World Wide Web?</h3>
+            <div class="answer-list" id="answer-list"></div>
+            <p class="quiz-feedback" id="quiz-feedback" aria-live="polite">Choose the answer you think is right.</p>
+            <div class="quiz-controls">
+              <span class="section-count">Learn one thing at a time.</span>
+              <button class="btn btn-dark" id="quiz-next" type="button" disabled>Next question →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p><strong>Internet Lab</strong> · Made for curious minds.</p>
+      <div class="footer-links">
+        <a href="#home">Back to top ↑</a>
+        <a href="https://github.com/Rexangels/Fun-facts-about-internet" target="_blank" rel="noopener noreferrer">View the code ↗</a>
+      </div>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    'use strict';
+
+    const facts = [
+      { id: 'internet-web', category: 'Internet', icon: '🌐', title: 'The internet and the web are different', body: 'The internet connects devices and networks around the world. The World Wide Web is a service that lets people visit linked pages using a browser.', why: 'Email and many online games also use the internet, but they are not the same thing as the web.' },
+      { id: 'packets', category: 'Internet', icon: '📦', title: 'Online data often travels in packets', body: 'When information is sent across a network, it is commonly divided into smaller units called packets and reassembled at the destination.', why: 'Breaking data into packets helps networks move information efficiently.' },
+      { id: 'router', category: 'Internet', icon: '📡', title: 'Routers help information find its way', body: 'A router forwards data between networks, helping it travel toward the right destination.', why: 'Think of it like a junction that directs traffic onto the next road.' },
+      { id: 'url', category: 'Web', icon: '🔗', title: 'A URL is a web address', body: 'URL stands for Uniform Resource Locator. It identifies where a resource, such as a webpage, can be found.', why: 'Reading a web address carefully can help you notice misspellings or suspicious websites.' },
+      { id: 'html-css-js', category: 'Web', icon: '🧩', title: 'Websites use different building blocks', body: 'HTML provides page structure, CSS controls presentation, and JavaScript can add dynamic behaviour and interactions.', why: 'Together, these technologies can turn a plain document into an interactive website.' },
+      { id: 'browser', category: 'Web', icon: '🧭', title: 'A browser turns web code into a page', body: 'Web browsers interpret HTML and CSS and can run JavaScript to display pages and interactive features.', why: 'Browsers help people read, navigate and use information on the web.' },
+      { id: 'vents', category: 'Care', icon: '🌬️', title: 'Air vents need room to breathe', body: 'Blocking a computer’s cooling vents can trap heat and may cause the device to overheat.', why: 'Keep vents clear and place your computer on a surface that allows airflow.' },
+      { id: 'liquid', category: 'Care', icon: '💧', title: 'Liquids and electronics do not mix', body: 'Spills can damage electronic components. Keep drinks away from computers and other electronic devices.', why: 'A little prevention can protect your device and your important files.' },
+      { id: 'ipo', category: 'Games', icon: '🎮', title: 'Games use input, processing and output', body: 'A key press or mouse click is input. The computer processes the action, then displays a result such as a character moving.', why: 'This same cycle helps explain how many computer systems work.' }
+    ];
+
+    const lessons = {
+      internet: {
+        icon: '🌐', tone: 'bg-internet', kicker: 'Lesson 01 · Internet basics',
+        title: 'How does the internet move information?',
+        lead: 'Think of the internet as a network of networks that helps devices communicate.',
+        steps: [
+          '<strong>Your device makes a request.</strong> For example, you open a website in a browser.',
+          '<strong>Data travels across connected networks.</strong> Routers help direct information toward its destination.',
+          '<strong>The response returns to your device.</strong> Your browser uses the received data to show the page.'
+        ],
+        tip: '<strong>Remember:</strong> The internet is the network. The web is one of the services that uses it.'
+      },
+      care: {
+        icon: '💻', tone: 'bg-care', kicker: 'Lesson 02 · Device care',
+        title: 'Small habits help protect your computer',
+        lead: 'Good computer care helps reduce avoidable damage and keeps your device usable.',
+        steps: [
+          '<strong>Keep the device clean and dry.</strong> Power it off and follow the manufacturer’s guidance before cleaning.',
+          '<strong>Allow air to flow.</strong> Keep cooling vents clear and avoid soft surfaces that block them.',
+          '<strong>Handle power and cables gently.</strong> Shut down properly and avoid pulling cables by the cord.'
+        ],
+        tip: '<strong>Remember:</strong> Keep food and drinks away from devices, and ask for help if a computer gets wet.'
+      },
+      games: {
+        icon: '🎮', tone: 'bg-games', kicker: 'Lesson 03 · Computer games',
+        title: 'Every game responds to your actions',
+        lead: 'A game is interactive software. It receives inputs, processes them, and shows outputs.',
+        steps: [
+          '<strong>Input:</strong> You press a key, click the mouse, or touch the screen.',
+          '<strong>Processing:</strong> The game checks the action and updates its internal state.',
+          '<strong>Output:</strong> The screen, sound or vibration responds to what happened.'
+        ],
+        tip: '<strong>Try it:</strong> Press a movement key in a game and describe the input, processing and output.'
+      }
+    };
+
+    const questions = [
+      { q: 'What is the World Wide Web?', options: ['A service that uses the internet to access linked pages', 'Another name for the computer keyboard', 'A type of computer battery'], answer: 0, explanation: 'Correct. The web uses the internet to make linked pages and other resources available.' },
+      { q: 'What is a URL used for?', options: ['Cooling a computer', 'Identifying the address of a resource on the web', 'Measuring the size of a keyboard'], answer: 1, explanation: 'Correct. A URL identifies where a web resource can be found.' },
+      { q: 'What should you do to help prevent overheating?', options: ['Cover the cooling vents', 'Place the laptop on a pillow', 'Keep cooling vents clear'], answer: 2, explanation: 'Correct. Clear vents help warm air escape and support airflow.' },
+      { q: 'Which technology mainly controls the presentation and styling of a webpage?', options: ['CSS', 'A router', 'A power cable'], answer: 0, explanation: 'Correct. CSS controls visual presentation, including layout, colours and typography.' },
+      { q: 'In a game, what is a key press?', options: ['Output', 'Input', 'Processing'], answer: 1, explanation: 'Correct. A key press is an input that the game processes to decide what happens next.' }
+    ];
+
+    const grid = document.getElementById('fact-grid');
+    const search = document.getElementById('fact-search');
+    const count = document.getElementById('fact-count');
+    const toast = document.getElementById('toast');
+    let activeFilter = 'All';
+    let toastTimer;
+    let dailyIndex = new Date().getDate() % facts.length;
+    let savedFacts = [];
+    try {
+      const stored = JSON.parse(localStorage.getItem('internet-lab-saved') || '[]');
+      if (Array.isArray(stored)) savedFacts = stored.filter(function (id) { return facts.some(function (fact) { return fact.id === id; }); });
+    } catch (error) {
+      savedFacts = [];
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(function () { toast.classList.remove('show'); }, 2300);
+    }
+
+    function persistSaved() {
+      try { localStorage.setItem('internet-lab-saved', JSON.stringify(savedFacts)); } catch (error) { /* Saved facts still work for this visit. */ }
+    }
+
+    function updateDailyFact() {
+      const fact = facts[dailyIndex];
+      document.getElementById('daily-icon').textContent = fact.icon;
+      document.getElementById('daily-title').textContent = fact.title + '.';
+      document.getElementById('daily-body').textContent = fact.body;
+      document.getElementById('daily-category').textContent = fact.category + ' discovery';
+    }
+
+    function renderFacts() {
+      const query = search.value.trim().toLowerCase();
+      const visible = facts.filter(function (fact) {
+        const matchesFilter = activeFilter === 'All' || (activeFilter === 'Saved' ? savedFacts.includes(fact.id) : fact.category === activeFilter);
+        const matchesSearch = !query || (fact.title + ' ' + fact.body + ' ' + fact.why + ' ' + fact.category).toLowerCase().includes(query);
+        return matchesFilter && matchesSearch;
+      });
+      count.textContent = visible.length + (visible.length === 1 ? ' discovery' : ' discoveries');
+      if (!visible.length) {
+        grid.innerHTML = '<div class="empty-state"><div style="font-size:2rem;margin-bottom:8px">🔎</div><strong>No facts found</strong><p style="margin:6px 0 0">Try another search or choose a different topic.</p></div>';
+        return;
+      }
+      grid.innerHTML = visible.map(function (fact) {
+        const saved = savedFacts.includes(fact.id);
+        const tone = fact.category === 'Internet' ? 'bg-internet' : fact.category === 'Web' ? 'bg-web' : fact.category === 'Care' ? 'bg-care' : 'bg-games';
+        return '<article class="fact-card">' +
+          '<div class="fact-card-top"><span class="fact-icon ' + tone + '" aria-hidden="true">' + fact.icon + '</span><span class="category-pill">' + fact.category + '</span>' +
+          '<button class="save-btn" type="button" data-save="' + fact.id + '" aria-label="' + (saved ? 'Remove saved fact: ' : 'Save fact: ') + fact.title + '" aria-pressed="' + saved + '">' + (saved ? '★' : '☆') + '</button></div>' +
+          '<h3>' + fact.title + '</h3><p>' + fact.body + '</p>' +
+          '<div class="fact-actions"><button type="button" data-why="' + fact.id + '">Why it matters ↗</button><button type="button" data-copy="' + fact.id + '">Copy fact</button></div></article>';
+      }).join('');
+    }
+
+    document.querySelectorAll('[data-filter]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        activeFilter = button.dataset.filter;
+        document.querySelectorAll('[data-filter]').forEach(function (item) { item.setAttribute('aria-pressed', String(item === button)); });
+        renderFacts();
+      });
+    });
+    search.addEventListener('input', renderFacts);
+
+    grid.addEventListener('click', async function (event) {
+      const saveButton = event.target.closest('[data-save]');
+      const whyButton = event.target.closest('[data-why]');
+      const copyButton = event.target.closest('[data-copy]');
+      if (saveButton) {
+        const id = saveButton.dataset.save;
+        savedFacts = savedFacts.includes(id) ? savedFacts.filter(function (item) { return item !== id; }) : savedFacts.concat(id);
+        persistSaved();
+        renderFacts();
+        showToast(savedFacts.includes(id) ? 'Fact saved for later ★' : 'Fact removed from saved items');
+      } else if (whyButton) {
+        const fact = facts.find(function (item) { return item.id === whyButton.dataset.why; });
+        if (fact) showToast(fact.why);
+      } else if (copyButton) {
+        const fact = facts.find(function (item) { return item.id === copyButton.dataset.copy; });
+        if (fact) {
+          try {
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(fact.title + '\n' + fact.body);
             } else {
-                button.classList.add('bg-red-500', 'text-white');
-                feedbackEl.textContent = "Not quite, try again next time! 😊";
-                feedbackEl.classList.add('text-red-600');
-                feedbackEl.classList.remove('text-green-600');
+              const area = document.createElement('textarea');
+              area.value = fact.title + '\n' + fact.body;
+              area.setAttribute('readonly', '');
+              area.style.position = 'fixed';
+              area.style.opacity = '0';
+              document.body.appendChild(area);
+              area.select();
+              const copied = document.execCommand('copy');
+              area.remove();
+              if (!copied) throw new Error('Copy not available');
             }
+            showToast('Fact copied to clipboard');
+          } catch (error) {
+            showToast('Copy is unavailable in this browser. You can select the fact text.');
+          }
         }
+      }
+    });
 
-        // --- Computer Care Interactive Logic ---
-        function showCareFeedback(button, isGoodPractice) {
-            const feedbackEl = document.getElementById('care-feedback');
-            if (isGoodPractice) {
-                feedbackEl.textContent = "Yes! That's a great way to care for your computer. 👍";
-                feedbackEl.className = 'mt-6 text-center font-bold text-2xl text-green-600';
-            } else {
-                feedbackEl.textContent = "Oops! That could harm your computer. Be careful! 👎";
-                feedbackEl.className = 'mt-6 text-center font-bold text-2xl text-red-600';
-            }
+    document.getElementById('next-daily').addEventListener('click', function () {
+      dailyIndex = (dailyIndex + 1) % facts.length;
+      updateDailyFact();
+    });
+
+    const lessonPanel = document.getElementById('lesson-panel');
+    document.querySelectorAll('[data-lesson]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        const lesson = lessons[button.dataset.lesson];
+        if (!lesson) return;
+        document.querySelectorAll('[data-lesson]').forEach(function (tab) { tab.setAttribute('aria-selected', String(tab === button)); });
+        lessonPanel.setAttribute('aria-labelledby', button.id);
+        document.getElementById('lesson-icon').className = 'big-icon ' + lesson.tone;
+        document.getElementById('lesson-icon').textContent = lesson.icon;
+        document.getElementById('lesson-kicker').textContent = lesson.kicker;
+        document.getElementById('lesson-title').textContent = lesson.title;
+        document.getElementById('lesson-lead').textContent = lesson.lead;
+        document.getElementById('lesson-steps').innerHTML = lesson.steps.map(function (step) { return '<li><span>' + step + '</span></li>'; }).join('');
+        document.getElementById('lesson-tip').innerHTML = lesson.tip;
+      });
+    });
+
+    document.getElementById('menu-toggle').addEventListener('click', function () {
+      const nav = document.getElementById('nav-links');
+      const open = nav.classList.toggle('open');
+      this.setAttribute('aria-expanded', String(open));
+      this.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+      this.textContent = open ? '×' : '☰';
+    });
+    document.querySelectorAll('#nav-links a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        document.getElementById('nav-links').classList.remove('open');
+        document.getElementById('menu-toggle').setAttribute('aria-expanded', 'false');
+        document.getElementById('menu-toggle').setAttribute('aria-label', 'Open navigation');
+        document.getElementById('menu-toggle').textContent = '☰';
+      });
+    });
+
+    let questionIndex = 0;
+    let score = 0;
+    let answered = false;
+    const answerList = document.getElementById('answer-list');
+    const feedback = document.getElementById('quiz-feedback');
+    const nextButton = document.getElementById('quiz-next');
+
+    function renderQuestion() {
+      answered = false;
+      const item = questions[questionIndex];
+      document.getElementById('quiz-step').textContent = 'QUESTION ' + String(questionIndex + 1).padStart(2, '0') + ' OF ' + String(questions.length).padStart(2, '0');
+      const percent = Math.round((questionIndex / questions.length) * 100);
+      document.getElementById('quiz-progress-label').textContent = percent + '% complete';
+      document.getElementById('quiz-progress-fill').style.width = percent + '%';
+      document.getElementById('quiz-progress').setAttribute('aria-valuenow', String(percent));
+      document.getElementById('quiz-question').textContent = item.q;
+      document.getElementById('quiz-score').textContent = 'Score: ' + score + ' / ' + questions.length;
+      answerList.innerHTML = item.options.map(function (option, index) {
+        return '<button class="answer-btn" type="button" data-answer="' + index + '"><span class="answer-key">' + String.fromCharCode(65 + index) + '</span><span>' + option + '</span></button>';
+      }).join('');
+      feedback.className = 'quiz-feedback';
+      feedback.textContent = 'Choose the answer you think is right.';
+      nextButton.disabled = true;
+      nextButton.textContent = questionIndex === questions.length - 1 ? 'See results →' : 'Next question →';
+    }
+
+    answerList.addEventListener('click', function (event) {
+      const button = event.target.closest('[data-answer]');
+      if (!button || answered) return;
+      answered = true;
+      const chosen = Number(button.dataset.answer);
+      const item = questions[questionIndex];
+      Array.from(answerList.querySelectorAll('[data-answer]')).forEach(function (option) {
+        option.disabled = true;
+        if (Number(option.dataset.answer) === item.answer) option.classList.add('correct');
+      });
+      if (chosen === item.answer) {
+        score++;
+        feedback.className = 'quiz-feedback good';
+        feedback.textContent = '✓ ' + item.explanation;
+      } else {
+        button.classList.add('incorrect');
+        feedback.className = 'quiz-feedback bad';
+        feedback.textContent = 'Not quite. ' + item.explanation;
+      }
+      document.getElementById('quiz-score').textContent = 'Score: ' + score + ' / ' + questions.length;
+      nextButton.disabled = false;
+    });
+
+    nextButton.addEventListener('click', function () {
+      if (!answered) return;
+      if (questionIndex < questions.length - 1) {
+        questionIndex++;
+        renderQuestion();
+        return;
+      }
+      const percent = Math.round((score / questions.length) * 100);
+      let title = 'Good effort!';
+      let emoji = '🌱';
+      let message = 'You have completed the challenge. Review the lessons and have another go to build your confidence.';
+      if (score === questions.length) {
+        title = 'Brilliant work!';
+        emoji = '🏆';
+        message = 'A perfect score. You understood all five questions — keep that curiosity going.';
+      } else if (score >= 3) {
+        title = 'Nice progress!';
+        emoji = '✨';
+        message = 'You got ' + score + ' out of ' + questions.length + ' right (' + percent + '%). Explore the lessons and see what you can improve next time.';
+      }
+      document.getElementById('quiz-main').innerHTML = '<div class="quiz-result"><span class="result-emoji" aria-hidden="true">' + emoji + '</span><h3>' + title + '</h3><p>' + message + '</p><button class="btn btn-dark" id="quiz-restart" type="button">Try again ↻</button></div>';
+      document.getElementById('quiz-progress-fill').style.width = '100%';
+      document.getElementById('quiz-progress').setAttribute('aria-valuenow', '100');
+      document.getElementById('quiz-progress-label').textContent = '100% complete';
+      document.getElementById('quiz-step').textContent = 'CHALLENGE COMPLETE';
+      document.getElementById('quiz-score').textContent = 'Score: ' + score + ' / ' + questions.length;
+      document.getElementById('quiz-restart').addEventListener('click', restartQuiz);
+    });
+
+    function restartQuiz() {
+      questionIndex = 0;
+      score = 0;
+      answered = false;
+      document.getElementById('quiz-main').innerHTML = '<div class="quiz-progress-row"><span id="quiz-step">QUESTION 01 OF 05</span><span id="quiz-progress-label">0% complete</span></div><div class="progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="quiz-progress"><div class="progress-fill" id="quiz-progress-fill"></div></div><h3 class="question" id="quiz-question"></h3><div class="answer-list" id="answer-list"></div><p class="quiz-feedback" id="quiz-feedback" aria-live="polite"></p><div class="quiz-controls"><span class="section-count">Learn one thing at a time.</span><button class="btn btn-dark" id="quiz-next" type="button" disabled>Next question →</button></div>';
+      document.getElementById('quiz-next').addEventListener('click', function () {
+        if (!answered) return;
+        if (questionIndex < questions.length - 1) {
+          questionIndex++;
+          renderQuestion();
+        } else {
+          finishQuiz();
         }
+      });
+      renderQuestion();
+    }
 
-        // --- Drag and Drop Logic for Games Page ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const draggables = document.querySelectorAll('.draggable');
-            const dropZones = document.querySelectorAll('.drop-zone');
-            const feedbackGames = document.getElementById('feedback-games');
-            let correctDrops = 0;
-            const totalDraggables = draggables.length;
+    function finishQuiz() {
+      const percent = Math.round((score / questions.length) * 100);
+      let title = 'Good effort!';
+      let emoji = '🌱';
+      let message = 'You have completed the challenge. Review the lessons and have another go to build your confidence.';
+      if (score === questions.length) { title = 'Brilliant work!'; emoji = '🏆'; message = 'A perfect score. You understood all five questions — keep that curiosity going.'; }
+      else if (score >= 3) { title = 'Nice progress!'; emoji = '✨'; message = 'You got ' + score + ' out of ' + questions.length + ' right (' + percent + '%). Explore the lessons and see what you can improve next time.'; }
+      document.getElementById('quiz-main').innerHTML = '<div class="quiz-result"><span class="result-emoji" aria-hidden="true">' + emoji + '</span><h3>' + title + '</h3><p>' + message + '</p><button class="btn btn-dark" id="quiz-restart" type="button">Try again ↻</button></div>';
+      document.getElementById('quiz-progress-fill').style.width = '100%';
+      document.getElementById('quiz-progress').setAttribute('aria-valuenow', '100');
+      document.getElementById('quiz-progress-label').textContent = '100% complete';
+      document.getElementById('quiz-step').textContent = 'CHALLENGE COMPLETE';
+      document.getElementById('quiz-score').textContent = 'Score: ' + score + ' / ' + questions.length;
+      document.getElementById('quiz-restart').addEventListener('click', restartQuiz);
+    }
 
-            draggables.forEach(draggable => {
-                draggable.addEventListener('dragstart', () => {
-                    draggable.classList.add('opacity-50');
-                });
-
-                draggable.addEventListener('dragend', () => {
-                    draggable.classList.remove('opacity-50');
-                });
-            });
-
-            dropZones.forEach(zone => {
-                zone.addEventListener('dragover', e => {
-                    e.preventDefault();
-                    zone.classList.add('over');
-                });
-
-                zone.addEventListener('dragleave', () => {
-                    zone.classList.remove('over');
-                });
-
-                zone.addEventListener('drop', e => {
-                    e.preventDefault();
-                    zone.classList.remove('over');
-                    const draggableId = document.querySelector('.opacity-50');
-                    const draggableType = draggableId.dataset.type;
-                    const zoneType = zone.id.includes('advantages') ? 'advantage' : 'disadvantage';
-
-                    if (draggableType === zoneType) {
-                        zone.appendChild(draggableId);
-                        draggableId.classList.remove('bg-blue-200');
-                        draggableId.classList.add('bg-green-200');
-                        draggableId.setAttribute('draggable', 'false');
-                        draggableId.style.cursor = 'default';
-                        correctDrops++;
-                        if(correctDrops === totalDraggables) {
-                            feedbackGames.textContent = "Great job! You sorted them all correctly! 🥳";
-                            feedbackGames.style.color = '#16a34a';
-                        }
-                    } else {
-                       feedbackGames.textContent = "Whoops! That doesn't belong there. Try again!";
-                       feedbackGames.style.color = '#ef4444';
-                       setTimeout(() => { feedbackGames.textContent = ''; }, 2000);
-                    }
-                });
-            });
-        });
-
-    </script>
+    updateDailyFact();
+    renderFacts();
+    renderQuestion();
+  </script>
 </body>
 </html>
