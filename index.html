@@ -585,13 +585,14 @@
     let questionIndex = 0;
     let score = 0;
     let answered = false;
-    const answerList = document.getElementById('answer-list');
-    const feedback = document.getElementById('quiz-feedback');
-    const nextButton = document.getElementById('quiz-next');
+    const quizMain = document.getElementById('quiz-main');
 
     function renderQuestion() {
       answered = false;
       const item = questions[questionIndex];
+      const answerList = document.getElementById('answer-list');
+      const feedback = document.getElementById('quiz-feedback');
+      const nextButton = document.getElementById('quiz-next');
       document.getElementById('quiz-step').textContent = 'QUESTION ' + String(questionIndex + 1).padStart(2, '0') + ' OF ' + String(questions.length).padStart(2, '0');
       const percent = Math.round((questionIndex / questions.length) * 100);
       document.getElementById('quiz-progress-label').textContent = percent + '% complete';
@@ -608,16 +609,33 @@
       nextButton.textContent = questionIndex === questions.length - 1 ? 'See results →' : 'Next question →';
     }
 
-    answerList.addEventListener('click', function (event) {
+    // Delegate events from the stable quiz container so retries keep working.
+    quizMain.addEventListener('click', function (event) {
+      if (event.target.closest('#quiz-restart')) {
+        restartQuiz();
+        return;
+      }
+
+      if (event.target.closest('#quiz-next')) {
+        advanceQuiz();
+        return;
+      }
+
       const button = event.target.closest('[data-answer]');
       if (!button || answered) return;
+
       answered = true;
       const chosen = Number(button.dataset.answer);
       const item = questions[questionIndex];
+      const answerList = document.getElementById('answer-list');
+      const feedback = document.getElementById('quiz-feedback');
+      const nextButton = document.getElementById('quiz-next');
+
       Array.from(answerList.querySelectorAll('[data-answer]')).forEach(function (option) {
         option.disabled = true;
         if (Number(option.dataset.answer) === item.answer) option.classList.add('correct');
       });
+
       if (chosen === item.answer) {
         score++;
         feedback.className = 'quiz-feedback good';
@@ -627,17 +645,30 @@
         feedback.className = 'quiz-feedback bad';
         feedback.textContent = 'Not quite. ' + item.explanation;
       }
+
       document.getElementById('quiz-score').textContent = 'Score: ' + score + ' / ' + questions.length;
       nextButton.disabled = false;
     });
 
-    nextButton.addEventListener('click', function () {
+    function advanceQuiz() {
       if (!answered) return;
       if (questionIndex < questions.length - 1) {
         questionIndex++;
         renderQuestion();
-        return;
+      } else {
+        finishQuiz();
       }
+    }
+
+    function restartQuiz() {
+      questionIndex = 0;
+      score = 0;
+      answered = false;
+      quizMain.innerHTML = '<div class="quiz-progress-row"><span id="quiz-step">QUESTION 01 OF 05</span><span id="quiz-progress-label">0% complete</span></div><div class="progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="quiz-progress"><div class="progress-fill" id="quiz-progress-fill"></div></div><h3 class="question" id="quiz-question"></h3><div class="answer-list" id="answer-list"></div><p class="quiz-feedback" id="quiz-feedback" aria-live="polite"></p><div class="quiz-controls"><span class="section-count">Learn one thing at a time.</span><button class="btn btn-dark" id="quiz-next" type="button" disabled>Next question →</button></div>';
+      renderQuestion();
+    }
+
+    function finishQuiz() {
       const percent = Math.round((score / questions.length) * 100);
       let title = 'Good effort!';
       let emoji = '🌱';
@@ -651,46 +682,8 @@
         emoji = '✨';
         message = 'You got ' + score + ' out of ' + questions.length + ' right (' + percent + '%). Explore the lessons and see what you can improve next time.';
       }
-      document.getElementById('quiz-main').innerHTML = '<div class="quiz-result"><span class="result-emoji" aria-hidden="true">' + emoji + '</span><h3>' + title + '</h3><p>' + message + '</p><button class="btn btn-dark" id="quiz-restart" type="button">Try again ↻</button></div>';
-      document.getElementById('quiz-progress-fill').style.width = '100%';
-      document.getElementById('quiz-progress').setAttribute('aria-valuenow', '100');
-      document.getElementById('quiz-progress-label').textContent = '100% complete';
-      document.getElementById('quiz-step').textContent = 'CHALLENGE COMPLETE';
-      document.getElementById('quiz-score').textContent = 'Score: ' + score + ' / ' + questions.length;
-      document.getElementById('quiz-restart').addEventListener('click', restartQuiz);
-    });
-
-    function restartQuiz() {
-      questionIndex = 0;
-      score = 0;
-      answered = false;
-      document.getElementById('quiz-main').innerHTML = '<div class="quiz-progress-row"><span id="quiz-step">QUESTION 01 OF 05</span><span id="quiz-progress-label">0% complete</span></div><div class="progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="quiz-progress"><div class="progress-fill" id="quiz-progress-fill"></div></div><h3 class="question" id="quiz-question"></h3><div class="answer-list" id="answer-list"></div><p class="quiz-feedback" id="quiz-feedback" aria-live="polite"></p><div class="quiz-controls"><span class="section-count">Learn one thing at a time.</span><button class="btn btn-dark" id="quiz-next" type="button" disabled>Next question →</button></div>';
-      document.getElementById('quiz-next').addEventListener('click', function () {
-        if (!answered) return;
-        if (questionIndex < questions.length - 1) {
-          questionIndex++;
-          renderQuestion();
-        } else {
-          finishQuiz();
-        }
-      });
-      renderQuestion();
-    }
-
-    function finishQuiz() {
-      const percent = Math.round((score / questions.length) * 100);
-      let title = 'Good effort!';
-      let emoji = '🌱';
-      let message = 'You have completed the challenge. Review the lessons and have another go to build your confidence.';
-      if (score === questions.length) { title = 'Brilliant work!'; emoji = '🏆'; message = 'A perfect score. You understood all five questions — keep that curiosity going.'; }
-      else if (score >= 3) { title = 'Nice progress!'; emoji = '✨'; message = 'You got ' + score + ' out of ' + questions.length + ' right (' + percent + '%). Explore the lessons and see what you can improve next time.'; }
-      document.getElementById('quiz-main').innerHTML = '<div class="quiz-result"><span class="result-emoji" aria-hidden="true">' + emoji + '</span><h3>' + title + '</h3><p>' + message + '</p><button class="btn btn-dark" id="quiz-restart" type="button">Try again ↻</button></div>';
-      document.getElementById('quiz-progress-fill').style.width = '100%';
-      document.getElementById('quiz-progress').setAttribute('aria-valuenow', '100');
-      document.getElementById('quiz-progress-label').textContent = '100% complete';
-      document.getElementById('quiz-step').textContent = 'CHALLENGE COMPLETE';
-      document.getElementById('quiz-score').textContent = 'Score: ' + score + ' / ' + questions.length;
-      document.getElementById('quiz-restart').addEventListener('click', restartQuiz);
+      // Replace the quiz content only after the final answer, leaving the score card intact.
+      quizMain.innerHTML = '<div class="quiz-result"><span class="result-emoji" aria-hidden="true">' + emoji + '</span><h3>' + title + '</h3><p>' + message + '</p><button class="btn btn-dark" id="quiz-restart" type="button">Try again ↻</button></div>';
     }
 
     updateDailyFact();
